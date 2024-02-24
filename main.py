@@ -1,5 +1,5 @@
 import time
-import smsapi
+import smsapi  # smsapi modülünü ekledim
 
 def menu():
     print(" [1] SMS GÖNDER")
@@ -16,10 +16,13 @@ def smskont(numara):
         return False
     return True
 
-
+# sms_gonder fonksiyonunu smsapi modülünden çağırarak güncelledim
 def sms_gonder(numara, adet):
-    print(f"'{numara}' numarasına {adet} adet SMS gönderildi.")
-    smsapi.sms_gonder(numara, adet)
+    success, message = smsapi.a101(numara)
+    if success:
+        print(message)
+    else:
+        print(message)
 
 while True:
     menu()

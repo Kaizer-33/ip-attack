@@ -538,15 +538,13 @@ def ToptanTeslim_sms_gonder(numara):
 
 
 
-# yapp.com.tr
-def Yapp_sms_gonder(numara):
+# yilmazticaret.net
+def YilmazTicaret_sms_gonder(numara):
     try:
-        url = "https://yapp.com.tr:443/api/mobile/v1/register"
-        json_data = {
-            "app_version": "1.1.2",
-            "code": "tr",
-            "device_model": "iPhone9,4",
-            "device_name": "",
-            "device_type": "I",
-            "device_version": "15.7.8",
-            "email": "",  # Change to your email if needed
+        url = "http://www.yilmazticaret.net:80/restapi2/register/"
+        headers = {"Authorization": "Basic eWlsbWF6OnlpbG1hejIwMTkqKg=="}
+        data = {
+            "telefon": (None, f"0 {numara}"),
+            "token": (None, "ExponentPushToken[eWJjFaN_bhjAAbN_rxUIlp]")
+        }
+        response = requests.post(url, headers=hh

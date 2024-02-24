@@ -42,3 +42,11 @@ while True:
                 else:
                     print("Geçersiz SMS adeti! Lütfen 1 ile 500 arasında bir sayı girin.")
             else:
+                print("Geçersiz giriş! Lütfen bir sayı girin.")
+        else:
+            print("Geçersiz telefon numarası! 10 haneli bir numara girin.")
+    elif secim == "2":
+        print("Programdan çıkılıyor...")
+        break
+    else:
+        print("Geçersiz seçenek!")

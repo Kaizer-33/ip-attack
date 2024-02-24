@@ -16,13 +16,14 @@ def smskont(numara):
         return False
     return True
 
-# sms_gonder fonksiyonunu smsapi modülünden çağırarak güncelledim
 def sms_gonder(numara, adet):
-    success, message = smsapi.a101(numara)
-    if success:
-        print(message)
-    else:
-        print(message)
+    api_list = [smsapi.a101, smsapi.bim, smsapi.defacto, smsapi.istegelsin]
+    for api in api_list:
+        success, message = api(numara)
+        if success:
+            print(message)
+        else:
+            print(message)
 
 while True:
     menu()
@@ -41,11 +42,3 @@ while True:
                 else:
                     print("Geçersiz SMS adeti! Lütfen 1 ile 500 arasında bir sayı girin.")
             else:
-                print("Geçersiz giriş! Lütfen bir sayı girin.")
-        else:
-            print("Geçersiz telefon numarası! 10 haneli bir numara girin.")
-    elif secim == "2":
-        print("Programdan çıkılıyor...")
-        break
-    else:
-        print("Geçersiz seçenek!")

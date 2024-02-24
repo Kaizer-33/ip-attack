@@ -1,9 +1,28 @@
 # smsapi.py
 
-import requests
-import json
+try:
+    import requests
+    import urllib3
+    import uuid
+except ImportError:
+    print("Gerekli modüller indiriliyor bekleyiniz...")
+    subprocess.check_call([sys.executable, "-m", "pip", "install", "requests==2.28.2", "urllib3==1.26.13", "uuid==1.30"])
+finally:
+    import concurrent.futures
+    import json
+    import os
+    import subprocess
+    import sys
+    import random
+    import requests
+    import string
+    import time
+    import urllib
+    import urllib3
+    import uuid
 
-def a101(numara):
+
+def a101(number):
     try:
         url = "https://www.a101.com.tr/users/otp-login/"
         payload = {
@@ -17,7 +36,9 @@ def a101(numara):
     except Exception as e:
         return False, f"A101: {str(e)}"
 
-def bim(numara):
+
+
+def bim(number):
     try:
         url = "https://bim.veesk.net/service/v1.0/account/login"
         payload = {
@@ -28,10 +49,10 @@ def bim(numara):
             return True, "BIM: SMS gönderildi"
         else:
             return False, "BIM: SMS gönderilemedi"
-    except:
-        return False, "BIM: Hata oluştu"
+    except Exception as e:
+        return False, f"BIM: {str(e)}"
 
-def defacto(numara):
+def defacto(number):
     try:
         url = "https://www.defacto.com.tr/Customer/SendPhoneConfirmationSms"
         payload = {
@@ -43,10 +64,10 @@ def defacto(numara):
             return True, "Defacto: SMS gönderildi"
         else:
             return False, "Defacto: SMS gönderilemedi"
-    except:
-        return False, "Defacto: Hata oluştu"
+    except Exception as e:
+        return False, f"Defacto: {str(e)}"
 
-def istegelsin(numara):
+def istegelsin(number):
     try:
         url = "https://prod.fasapi.net/"
         payload = {
@@ -60,5 +81,5 @@ def istegelsin(numara):
             return True, "İsteGelsin: SMS gönderildi"
         else:
             return False, "İsteGelsin: SMS gönderilemedi"
-    except:
-        return False, "İsteGelsin: Hata oluştu"
+    except Exception as e:
+        return False, f"İsteGelsin: {str(e)}"

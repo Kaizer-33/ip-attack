@@ -537,12 +537,16 @@ def ToptanTeslim_sms_gonder(numara):
         return False, f"toptanteslim.com: {str(e)}"
 
 
-# uysalmarket.com.tr
-def Uysal_sms_gonder(numara):
+
+# yapp.com.tr
+def Yapp_sms_gonder(numara):
     try:
-        url = "https://api.uysalmarket.com.tr:443/api/mobile-users/send-register-sms"
-        headers = {
-            "Accept": "*/*",
-            "Content-Type": "application/json",
-            "Accept-Encoding": "gzip, deflate, br",
-            "User-Agent": "UM Uysal Online Market/1.0.15 (team.clevel.uysalmarket; build:1; iOS 15.8.0) Ala
+        url = "https://yapp.com.tr:443/api/mobile/v1/register"
+        json_data = {
+            "app_version": "1.1.2",
+            "code": "tr",
+            "device_model": "iPhone9,4",
+            "device_name": "",
+            "device_type": "I",
+            "device_version": "15.7.8",
+            "email": "",  # Change to your email if needed

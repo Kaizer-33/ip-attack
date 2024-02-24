@@ -538,13 +538,7 @@ def ToptanTeslim_sms_gonder(numara):
 
 
 
-# yilmazticaret.net
-def YilmazTicaret_sms_gonder(numara):
-    try:
-        url = "http://www.yilmazticaret.net:80/restapi2/register/"
-        headers = {"Authorization": "Basic eWlsbWF6OnlpbG1hejIwMTkqKg=="}
-        data = {
-            "telefon": (None, f"0 {numara}"),
-            "token": (None, "ExponentPushToken[eWJjFaN_bhjAAbN_rxUIlp]")
-        }
-        response = requests.post(url, headers=hh
+if __name__ == "__main__":
+    numara = input("Global No Sorgu İçin +90 Şeklinde Giriniz:")
+    sms_gonder(numara)
+    

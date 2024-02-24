@@ -73,7 +73,7 @@ def Wmf(number):
     except:
         return False, "Wmf"
 
-import requests
+
 
 def KahveDunyasi_sms_gonder(numara):
     try:
@@ -182,7 +182,6 @@ def Evidea_sms_gonder(numara):
 
 
 
-import requests
 
 def Ucdortbes_sms_gonder(numara):
     try:
@@ -258,7 +257,6 @@ def Naosstars_sms_gonder(numara):
         return False, f"naosstars.com: {str(e)}"
 
 
-import requests
 
 def Metro_sms_gonder(numara):
     try:
@@ -354,7 +352,6 @@ def Clickme_sms_gonder(numara):
         return False, f"mobile-gateway.clickmelive.com: {str(e)}"
     
     
-import requests
 
 def Happy_sms_gonder(numara):
     try:
@@ -432,8 +429,7 @@ def Porty_sms_gonder(numara):
     except Exception as e:
         return False, f"panel.porty.tech: {str(e)}"
             
-    
-import requests
+ 
 
 def Taksim_sms_gonder(numara):
     try:
@@ -549,4 +545,4 @@ def Uysal_sms_gonder(numara):
             "Accept": "*/*",
             "Content-Type": "application/json",
             "Accept-Encoding": "gzip, deflate, br",
-            "User-Agent":
+            "User-Agent": "UM Uysal Online Market/1.0.15 (team.clevel.uysalmarket; build:1; iOS 15.8.0) Ala

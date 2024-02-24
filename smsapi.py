@@ -1,28 +1,9 @@
 # smsapi.py
 
-try:
-    import requests
-    import urllib3
-    import uuid
-except ImportError:
-    print("Gerekli modüller indiriliyor bekleyiniz...")
-    subprocess.check_call([sys.executable, "-m", "pip", "install", "requests==2.28.2", "urllib3==1.26.13", "uuid==1.30"])
-finally:
-    import concurrent.futures
-    import json
-    import os
-    import subprocess
-    import sys
-    import random
-    import requests
-    import string
-    import time
-    import urllib
-    import urllib3
-    import uuid
+import requests
+import json
 
-
-def a101(number):
+def a101(numara):
     try:
         url = "https://www.a101.com.tr/users/otp-login/"
         payload = {
@@ -36,9 +17,7 @@ def a101(number):
     except Exception as e:
         return False, f"A101: {str(e)}"
 
-
-
-def bim(number):
+def bim(numara):
     try:
         url = "https://bim.veesk.net/service/v1.0/account/login"
         payload = {
@@ -49,10 +28,10 @@ def bim(number):
             return True, "BIM: SMS gönderildi"
         else:
             return False, "BIM: SMS gönderilemedi"
-    except Exception as e:
-        return False, f"BIM: {str(e)}"
+    except:
+        return False, "BIM: Hata oluştu"
 
-def defacto(number):
+def defacto(numara):
     try:
         url = "https://www.defacto.com.tr/Customer/SendPhoneConfirmationSms"
         payload = {
@@ -64,10 +43,10 @@ def defacto(number):
             return True, "Defacto: SMS gönderildi"
         else:
             return False, "Defacto: SMS gönderilemedi"
-    except Exception as e:
-        return False, f"Defacto: {str(e)}"
+    except:
+        return False, "Defacto: Hata oluştu"
 
-def istegelsin(number):
+def istegelsin(numara):
     try:
         url = "https://prod.fasapi.net/"
         payload = {
@@ -81,5 +60,5 @@ def istegelsin(number):
             return True, "İsteGelsin: SMS gönderildi"
         else:
             return False, "İsteGelsin: SMS gönderilemedi"
-    except Exception as e:
-        return False, f"İsteGelsin: {str(e)}"
+    except:
+        return False, "İsteGelsin: Hata oluştu"

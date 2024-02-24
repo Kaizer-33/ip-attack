@@ -1,10 +1,14 @@
+import subprocess
+import sys
+
 try:
     import requests
     import urllib3
     import uuid
 except ImportError:
     print("Gerekli modüller indiriliyor bekleyiniz...")
-    subprocess.check_call([sys.executable, "-m", "pip", "install", "requests==2.28.2", "urllib3==1.26.13", "uuid==1.30"])
+    subprocess.check_call([sys.executable, "-m", "pip", "install", "requests==2.28.2", "urllib3==1.26.7", "uuid==1.30"])
+
 finally:
     import concurrent.futures
     import json
@@ -19,8 +23,6 @@ finally:
     import urllib3
     import uuid
     import smsapi
-
-
 
 def menu():
     print(" [1] SMS GÖNDER")
@@ -72,5 +74,3 @@ while True:
         break
     else:
         print("Geçersiz seçenek!")
-
-

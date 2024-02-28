@@ -27,7 +27,7 @@ def figlet():
 
 print(Fore.GREEN + """
    DİKKAT YAPILAN İŞLEMLER İÇİN SORUMLULUK KABUL
-                 ETMİYORUZ""")
+                    ETMİYORUZ""")
 time.sleep(1.5)
 figlet()
 

@@ -210,11 +210,11 @@ def main_menu():
             print(Fore.CYAN + """
   Seçenek [1] Kullandığın Wifi IP'sini Getirir
   
-  Seçenek [2] https:// Diye Girdiğin Sitenin IP'sini Getirir
+  Seçenek [2] https:// Diye Girdiğin Sitenin\n  IP'sini Getirir
   
-  Seçenek [3] IP Saldırı Yapar Derken Wi-fi IP'sine Saldırı\n  Veri Tüketimi Artırmak Yada Çökme Yapar Wi-fi'Ye
+  Seçenek [3] IP Saldırı Yapar Wi-fi IP'sine\n  Veri Tüketimi Artırmak Yada Çökme Yapar.
   
-  Seçenek [4] DDoS Saldırısı Yani Siteyi Çökertir www. Şeklinde
+  Seçenek [4] DDoS Saldırısı Siteyi Çökertir www. Şeklinde
 """)
         elif choice == "6":
             print(Fore.YELLOW + "Çıkış Yapılıyor...")

@@ -1,2 +1,3 @@
-# eig-sms
-SMS gönderme ve glbl tel sorgu
+# ip attack
+
+İnternet siteleri yada wifi'leri yorar hızını yavaşlatır

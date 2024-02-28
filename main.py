@@ -51,21 +51,24 @@ def get_local_ip_addresses():
     return ip_addresses
 
 def list_local_ip_addresses():
-    ip_addresses = get_local_ip_addresses()
     print(Fore.GREEN + "Yerel IP Adresiniz:")
+    ip_addresses = get_local_ip_addresses()
     for ip in ip_addresses:
         print(Fore.YELLOW + ip)
 
 def get_ip_and_port_from_url(url):
     try:
         parsed_url = urlparse(url)
-        return socket.gethostbyname(parsed_url.hostname), parsed_url.port
+        if parsed_url.netloc:
+            return socket.gethostbyname(parsed_url.hostname), parsed_url.port
+        else:
+            raise ValueError("Geçersiz URL")
     except Exception as e:
         print(Fore.RED + f"Hata: {e}")
     return None, None
 
 def list_external_ip_address():
-    input_url = input(Fore.GREEN + "Link Gir La gardaş: ")
+    input_url = input(Fore.GREEN + "Site URL'sini Girin: ")
     parsed_url = urlparse(input_url)
     if parsed_url.scheme:
         try:
@@ -195,7 +198,7 @@ def main_menu():
         print(Fore.GREEN + "[2] Link Gir IP Çeksin")
         print(Fore.GREEN + "[3] IP Saldırı Yap")
         print(Fore.GREEN + "[4] DDoS Saldırısı Yap")
-        print(Fore.GREEN + "[5] Ne İşe Yarar?")
+        print(Fore.GREEN + "[5] Bu Tool Ne İşe Yarar?")
         print(Fore.GREEN + "[6] Çıkış Yap")
         choice = input(Fore.GREEN + "~$ ")
         if choice == "1":
@@ -210,11 +213,13 @@ def main_menu():
             print(Fore.CYAN + """
   Seçenek [1] Kullandığın Wifi IP'sini Getirir
   
-  Seçenek [2] https:// Diye Girdiğin Sitenin\n  IP'sini Getirir
+  Seçenek [2] https:// Diye Girdiğin Sitenin IP'sini Getirir
   
-  Seçenek [3] IP Saldırı Yapar Wi-fi IP'sine\n  Veri Tüketimi Artırmak Yada Çökme Yapar.
+  Seçenek [3] IP Saldırı Yapar Derken Wi-fi IP'sine Saldırı\n  Veri Tüketimi Artırmak Yada Çökme Yapar Wi-fi'Ye
   
-  Seçenek [4] DDoS Saldırısı Siteyi Çökertir www. Şeklinde
+  Seçenek [4] DDoS Saldırısı Yani Siteyi Çökertir www. Şeklinde
+  
+  Port İstendiğinde IP'ye Bağlı 80,8080,443 Deneyebilirsiniz
 """)
         elif choice == "6":
             print(Fore.YELLOW + "Çıkış Yapılıyor...")
@@ -223,6 +228,6 @@ def main_menu():
             sys.exit()
         else:
             print(Fore.RED + "GEÇERSİZ SEÇİM!")
-            
+
 if __name__ == "__main__":
     main_menu()

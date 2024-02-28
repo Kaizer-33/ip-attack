@@ -9,21 +9,27 @@ from colorama import Fore, Style
 from urllib.parse import urlparse
 
 
+
+import pyfiglet
+from colorama import Fore
+import time
+
 def slow_print(text):
     for char in text:
         print(char, end='', flush=True)
-        time.sleep(0.015)
+        time.sleep(0.016)
     print()
 
-
 def figlet():
-    ascii_art = pyfiglet.figlet_format(Fore.GREEN + "KAIZER")
+    ascii_art = pyfiglet.figlet_format("          KAIZER")
+    print(Fore.GREEN)
     slow_print(ascii_art)
 
-
-print(Fore.GREEN + """    DİKKAT YAPILAN İŞLEMLER İÇİN SORUMLULUK KABUL\n                        ETMİYORUZ""")
-time.sleep(2)
+print("""       DİKKAT YAPILAN İŞLEMLER İÇİN SORUMLULUK KABUL
+                             ETMİYORUZ""")
+time.sleep(1.5)
 figlet()
+
 
 saldırı_hızı = 1
 saldırı_zamanlayıcı = 1 / saldırı_hızı

@@ -25,8 +25,9 @@ def figlet():
     print(Fore.GREEN)
     slow_print(ascii_art)
 
-print("""       DİKKAT YAPILAN İŞLEMLER İÇİN SORUMLULUK KABUL
-                             ETMİYORUZ""")
+print(Fore.GREEN + """
+DİKKAT YAPILAN İŞLEMLER İÇİN SORUMLULUK KABUL
+               ETMİYORUZ""")
 time.sleep(1.5)
 figlet()
 

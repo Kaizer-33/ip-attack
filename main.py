@@ -17,12 +17,11 @@ def slow_print(text):
 
 
 def figlet():
-    ascii_art = pyfiglet.figlet_format(Fore.GREEN + "  KAIZER")
+    ascii_art = pyfiglet.figlet_format(Fore.GREEN + "KAIZER")
     slow_print(ascii_art)
 
 
-print(Fore.GREEN + """
-           DİKKAT YAPILAN İŞLEMLER İÇİN SORUMLULUK KABUL\n                             ETMİYORUZ""")
+print(Fore.GREEN + """    DİKKAT YAPILAN İŞLEMLER İÇİN SORUMLULUK KABUL\n                        ETMİYORUZ""")
 time.sleep(2)
 figlet()
 

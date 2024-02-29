@@ -8,6 +8,7 @@ from colorama import Fore
 from urllib.parse import urlparse
 import random
 import queue
+import os
 
 class Bot:
     def __init__(self, target_ip, target_port, attack_queue):
@@ -184,7 +185,7 @@ def attack_menu():
 
     while attack_ongoing and (max_attack is None or attack_counter < max_attack):
         pass
-        
+    
 
 
 def main_menu():
@@ -192,7 +193,7 @@ def main_menu():
     global attack_counter
     global max_attack
     while True:
-        time.sleep(2)
+        time.sleep(1)
         print_menu()
         choice = input(Fore.GREEN + "  ~$ ")
         if choice == "1":
@@ -223,12 +224,15 @@ def main_menu():
   Deneyebilirsiniz.
 """)
         elif choice == "6":
-            print(Fore.YELLOW + "  Çıkış Yapılıyor...")
-            time.sleep(2)
             attack_ongoing = False
+            print(Fore.YELLOW + "  Çıkış Yapılıyor...")
+            time.sleep(1.5)
             sys.exit()
         else:
             print(Fore.RED + "  GEÇERSİZ SEÇİM!")
+        
+        if not attack_ongoing:
+            break
 
 if __name__ == "__main__":
     attack_ongoing = False

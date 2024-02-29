@@ -1,14 +1,30 @@
+import subprocess
+import time
+import sys
 import socket
 import threading
 import netifaces
-import time
-import sys
 import pyfiglet
 from colorama import Fore
 from urllib.parse import urlparse
 import random
 import queue
 import os
+
+required_modules = ['netifaces', 'pyfiglet', 'colorama']
+
+def install_module(module):
+    subprocess.check_call([sys.executable, "-m", "pip", "install", module])
+
+def install_required_modules():
+    for module in required_modules:
+        print(f"İndiriliyor: {module}")
+        install_module(module)
+
+install_required_modules()
+os.system("clear")
+
+
 
 class Bot:
     def __init__(self, target_ip, target_port, attack_queue):

